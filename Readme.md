@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алёна Честная](https://up.htmlacademy.ru/javascript/17/user/200224).
-* Наставник: `Неизвестно`.
+* Наставник: `Евгений Фаллер`.
 
 ---
 
