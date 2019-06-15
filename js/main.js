@@ -3,6 +3,7 @@
 var MAP_HEIGHT = 630;
 var EMPTY_MAP_SPACE = 130;
 var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
 var MAIN_PIN_WIDTH = 65;
 
 // создание объекта-похожего объявления
@@ -107,7 +108,24 @@ for (var i = 0; i < form.children.length; i++) {
 
 var map = document.querySelector('.map');
 var mainPin = document.querySelector('.map__pin--main');
+var isPageActive = false;
 
+// связь координат главной метки со значением поля адреса
+var setAddress = function() {
+  var addressInput = form.querySelector('#address');
+
+  var mainPinPositionX = parseFloat(mainPin.style.left) + MAIN_PIN_WIDTH / 2;
+  var mainPinPositionY;
+  if (isPageActive) {
+    mainPinPositionY = parseFloat(mainPin.style.top) + PIN_HEIGHT;
+  } else {
+    mainPinPositionY = parseFloat(mainPin.style.top) + MAIN_PIN_WIDTH / 2;
+  }
+
+  addressInput.value = mainPinPositionX + ', ' + mainPinPositionY;
+};
+
+// перевод страницы в активный режим
 var activatePage = function() {
   map.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
@@ -115,19 +133,13 @@ var activatePage = function() {
   for (var i = 0; i < form.children.length; i++) {
     form.children[i].removeAttribute('disabled');
   }
+
+  isPageActive = true;
+
+  setAddress();
 };
 
-// связь координат главной метки со значением поля адреса
-var setAddress = function() {
-  var addressInput = form.querySelector('#address');
+mainPin.addEventListener('mouseup', activatePage);
 
-  var mainPinPositionX = parseFloat(mainPin.style.left) + MAIN_PIN_WIDTH / 2;
-  var mainPinPositionY = parseFloat(mainPin.style.top) + MAIN_PIN_WIDTH / 2;
-
-  addressInput.value = mainPinPositionX + ', ' + mainPinPositionY;
-};
-
-mainPin.addEventListener('click', activatePage);
-mainPin.addEventListener('mouseup', setAddress);
-
+// для изначального значения поля адреса при загрузке страницы
 setAddress();
