@@ -3,6 +3,7 @@
 var MAP_HEIGHT = 630;
 var EMPTY_MAP_SPACE = 130;
 var PIN_WIDTH = 50;
+var MAIN_PIN_WIDTH = 65;
 
 // создание объекта-похожего объявления
 var avatars = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -116,5 +117,17 @@ var activatePage = function() {
   }
 };
 
-mainPin.addEventListener('click', activatePage);
+// связь координат главной метки со значением поля адреса
+var setAddress = function() {
+  var addressInput = form.querySelector('#address');
 
+  var mainPinPositionX = parseFloat(mainPin.style.left) + MAIN_PIN_WIDTH / 2;
+  var mainPinPositionY = parseFloat(mainPin.style.top) + MAIN_PIN_WIDTH / 2;
+
+  addressInput.value = mainPinPositionX + ', ' + mainPinPositionY;
+};
+
+mainPin.addEventListener('click', activatePage);
+mainPin.addEventListener('mouseup', setAddress);
+
+setAddress();
