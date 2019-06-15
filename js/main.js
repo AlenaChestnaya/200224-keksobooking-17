@@ -63,8 +63,6 @@ for (var i = 0; i < 8; i++) {
   similarPosters.push(similarPoster);
 };
 
-//document.querySelector('.map').classList.remove('map--faded');
-
 // создание дом-элемента с данными из объектов
 var createPosterCard = function(similarPoster) {
   var template = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -105,3 +103,18 @@ var form = document.querySelector('.ad-form');
 for (var i = 0; i < form.children.length; i++) {
   form.children[i].setAttribute('disabled', 'disabled');
 }
+
+var map = document.querySelector('.map');
+var mainPin = document.querySelector('.map__pin--main');
+
+var activatePage = function() {
+  map.classList.remove('map--faded');
+  form.classList.remove('ad-form--disabled');
+
+  for (var i = 0; i < form.children.length; i++) {
+    form.children[i].removeAttribute('disabled');
+  }
+};
+
+mainPin.addEventListener('click', activatePage);
+
