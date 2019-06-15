@@ -63,7 +63,7 @@ for (var i = 0; i < 8; i++) {
   similarPosters.push(similarPoster);
 };
 
-document.querySelector('.map').classList.remove('map--faded');
+//document.querySelector('.map').classList.remove('map--faded');
 
 // создание дом-элемента с данными из объектов
 var createPosterCard = function(similarPoster) {
@@ -98,4 +98,10 @@ var renderSimilarPosters = function(similarPosters) {
   mapPinsBlock.appendChild(fragment);
 };
 
-renderSimilarPosters(similarPosters);
+//renderSimilarPosters(similarPosters);
+
+var form = document.querySelector('.ad-form');
+
+for (var i = 0; i < form.children.length; i++) {
+  form.children[i].setAttribute('disabled', 'disabled');
+}
