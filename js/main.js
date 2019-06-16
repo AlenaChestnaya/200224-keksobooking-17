@@ -3,6 +3,8 @@
 var MAP_HEIGHT = 630;
 var EMPTY_MAP_SPACE = 130;
 var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
+var MAIN_PIN_WIDTH = 65;
 
 // создание объекта-похожего объявления
 var avatars = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -63,8 +65,6 @@ for (var i = 0; i < 8; i++) {
   similarPosters.push(similarPoster);
 };
 
-document.querySelector('.map').classList.remove('map--faded');
-
 // создание дом-элемента с данными из объектов
 var createPosterCard = function(similarPoster) {
   var template = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -98,4 +98,48 @@ var renderSimilarPosters = function(similarPosters) {
   mapPinsBlock.appendChild(fragment);
 };
 
-renderSimilarPosters(similarPosters);
+//renderSimilarPosters(similarPosters);
+
+var form = document.querySelector('.ad-form');
+
+for (var i = 0; i < form.children.length; i++) {
+  form.children[i].setAttribute('disabled', 'disabled');
+}
+
+var map = document.querySelector('.map');
+var mainPin = document.querySelector('.map__pin--main');
+var isPageActive = false;
+
+// связь координат главной метки со значением поля адреса
+var setAddress = function() {
+  var addressInput = form.querySelector('#address');
+
+  var mainPinPositionX = parseFloat(mainPin.style.left) + MAIN_PIN_WIDTH / 2;
+  var mainPinPositionY;
+  if (isPageActive) {
+    mainPinPositionY = parseFloat(mainPin.style.top) + PIN_HEIGHT;
+  } else {
+    mainPinPositionY = parseFloat(mainPin.style.top) + MAIN_PIN_WIDTH / 2;
+  }
+
+  addressInput.value = mainPinPositionX + ', ' + mainPinPositionY;
+};
+
+// перевод страницы в активный режим
+var activatePage = function() {
+  map.classList.remove('map--faded');
+  form.classList.remove('ad-form--disabled');
+
+  for (var i = 0; i < form.children.length; i++) {
+    form.children[i].removeAttribute('disabled');
+  }
+
+  isPageActive = true;
+
+  setAddress();
+};
+
+mainPin.addEventListener('mouseup', activatePage);
+
+// для изначального значения поля адреса при загрузке страницы
+setAddress();
