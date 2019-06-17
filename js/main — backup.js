@@ -5,13 +5,9 @@ var EMPTY_MAP_SPACE = 130;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var MAIN_PIN_WIDTH = 65;
-var SIMILAR_POSTERS_COUNT = 8;
 
 // создание объекта-похожего объявления
-var avatars = [];
-for (var i = 1; i <= SIMILAR_POSTERS_COUNT; i++) {
-  avatars.push(i);
-}
+var avatars = [1, 2, 3, 4, 5, 6, 7, 8];
 
 var generateSimilarPoster = function() {
 
@@ -64,7 +60,7 @@ var generateSimilarPoster = function() {
 // создание массива объектов-объявлений
 var similarPosters = [];
 
-for (var i = 0; i < SIMILAR_POSTERS_COUNT; i++) {
+for (var i = 0; i < 8; i++) {
   var similarPoster = generateSimilarPoster();
   similarPosters.push(similarPoster);
 };
