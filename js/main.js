@@ -7,66 +7,60 @@ var PIN_HEIGHT = 70;
 var MAIN_PIN_WIDTH = 65;
 var SIMILAR_POSTERS_COUNT = 8;
 
-// создание объекта-похожего объявления
+// создание массива объектов-объявлений
+var map = document.querySelector('.map');
+var mapWidth = map.clientWidth;
+var workspaceHeight = MAP_HEIGHT - EMPTY_MAP_SPACE;
+var typesOfOffer = ['palace', 'flat', 'house', 'bungalo'];
 var avatars = [];
 for (var i = 1; i <= SIMILAR_POSTERS_COUNT; i++) {
   avatars.push(i);
 }
 
-var generateSimilarPoster = function() {
+var calcRandomOfArray = function(array) {
+  var random = Math.floor(Math.random() * array.length);
+  return random;
+};
+var calcRandomOfDiapason = function(diapason) {
+  var random = Math.round(Math.random() * diapason);
+  return random;
+};
 
-  var similarPoster = {
-    'author': {
-      'avatar': ''
-    },
-    'offer': {
-      'type': ''
-    },
-    'location': {
-      'x': '',
-      'y': ''
-    }
+var generateSimilarPosters = function() {
+  var similarPosters = [];
+  for (var i = 0; i < SIMILAR_POSTERS_COUNT; i++) {
+    var similarPoster = {
+      'author': {
+        'avatar': ''
+      },
+      'offer': {
+        'type': ''
+      },
+      'location': {
+        'x': '',
+        'y': ''
+      }
+    };
+
+    var randomNumber = calcRandomOfArray(avatars);
+    var avatarNumber = avatars[randomNumber];
+    avatars.splice(randomNumber, 1);
+
+    var userAvatar = 'img/avatars/user0' + avatarNumber + '.png';
+    similarPoster.author.avatar = userAvatar;
+
+    var typeOfOffer = typesOfOffer[calcRandomOfArray(typesOfOffer)];
+    similarPoster.offer.type = typeOfOffer;
+
+    var positionX = calcRandomOfDiapason(mapWidth);
+    var positionY = calcRandomOfDiapason(workspaceHeight) + EMPTY_MAP_SPACE;
+
+    similarPoster.location.x = positionX;
+    similarPoster.location.y = positionY;
+
+    similarPosters.push(similarPoster);
   };
-
-  var calcRandomOfArray = function(array) {
-    var random = Math.floor(Math.random() * array.length);
-    return random;
-  };
-  var calcRandomOfDiapason = function(diapason) {
-    var random = Math.round(Math.random() * diapason);
-    return random;
-  };
-
-  var randomNumber = calcRandomOfArray(avatars);
-  var avatarNumber = avatars[randomNumber];
-  avatars.splice(randomNumber, 1);
-
-  var userAvatar = 'img/avatars/user0' + avatarNumber + '.png';
-  similarPoster.author.avatar = userAvatar;
-
-  var typesOfOffer = ['palace', 'flat', 'house', 'bungalo'];
-  var typeOfOffer = typesOfOffer[calcRandomOfArray(typesOfOffer)];
-  similarPoster.offer.type = typeOfOffer;
-
-  var map = document.querySelector('.map');
-  var mapWidth = map.clientWidth;
-  var positionX = calcRandomOfDiapason(mapWidth);
-
-  var workspaceHeight = MAP_HEIGHT - EMPTY_MAP_SPACE;
-  var positionY = calcRandomOfDiapason(workspaceHeight) + EMPTY_MAP_SPACE;
-
-  similarPoster.location.x = positionX;
-  similarPoster.location.y = positionY;
-
-  return similarPoster;
-}
-
-// создание массива объектов-объявлений
-var similarPosters = [];
-
-for (var i = 0; i < SIMILAR_POSTERS_COUNT; i++) {
-  var similarPoster = generateSimilarPoster();
-  similarPosters.push(similarPoster);
+  return similarPosters;
 };
 
 // создание дом-элемента с данными из объектов
@@ -128,18 +122,22 @@ var setAddress = function() {
 };
 
 // перевод страницы в активный режим
+
 var activatePage = function() {
-  map.classList.remove('map--faded');
-  form.classList.remove('ad-form--disabled');
+  if (!isPageActive) {
+    map.classList.remove('map--faded');
+    form.classList.remove('ad-form--disabled');
 
-  for (var i = 0; i < form.children.length; i++) {
-    form.children[i].removeAttribute('disabled');
+    for (var i = 0; i < form.children.length; i++) {
+      form.children[i].removeAttribute('disabled');
+    }
+
+    isPageActive = true;
+    var similarPosters = generateSimilarPosters();
+    renderSimilarPosters(similarPosters);
+    setAddress();
   }
-
-  isPageActive = true;
-  renderSimilarPosters(similarPosters);
-  setAddress();
-};
+}
 
 mainPin.addEventListener('mouseup', activatePage);
 
