@@ -6,12 +6,13 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var MAIN_PIN_WIDTH = 65;
 var SIMILAR_POSTERS_COUNT = 8;
+var OFFER_TYPES = ['bungalo', 'flat', 'house', 'palace'];
+var MIN_PRICES_PER_NIGHT = [0, 1000, 5000, 10000];
 
 // создание массива объектов-объявлений
 var map = document.querySelector('.map');
 var mapWidth = map.clientWidth;
 var workspaceHeight = MAP_HEIGHT - EMPTY_MAP_SPACE;
-var typesOfOffer = ['palace', 'flat', 'house', 'bungalo'];
 var avatars = [];
 for (var i = 1; i <= SIMILAR_POSTERS_COUNT; i++) {
   avatars.push(i);
@@ -49,7 +50,7 @@ var generateSimilarPosters = function() {
     var userAvatar = 'img/avatars/user0' + avatarNumber + '.png';
     similarPoster.author.avatar = userAvatar;
 
-    var typeOfOffer = typesOfOffer[calcRandomOfArray(typesOfOffer)];
+    var typeOfOffer = OFFER_TYPES[calcRandomOfArray(OFFER_TYPES)];
     similarPoster.offer.type = typeOfOffer;
 
     var positionX = calcRandomOfDiapason(mapWidth);
@@ -99,7 +100,7 @@ var renderSimilarPosters = function(similarPosters) {
 var form = document.querySelector('.ad-form');
 
 for (var i = 0; i < form.children.length; i++) {
-  form.children[i].setAttribute('disabled', 'disabled');
+  form.children[i].disabled = true;
 }
 
 var map = document.querySelector('.map');
@@ -143,3 +144,27 @@ mainPin.addEventListener('mouseup', activatePage);
 
 // для изначального значения поля адреса при загрузке страницы
 setAddress();
+
+// связь полей формы Тип жилья и Цена за ночь
+var offerTypeSelect = form.querySelector('#type');
+var priceInput = form.querySelector('#price');
+
+offerTypeSelect.addEventListener('change', function() {
+  var elementIndex = OFFER_TYPES.indexOf(offerTypeSelect.value);
+
+  if (elementIndex !== -1) {
+    priceInput.min = MIN_PRICES_PER_NIGHT[elementIndex];
+    priceInput.placeholder = MIN_PRICES_PER_NIGHT[elementIndex];
+  }
+});
+
+// связь полей формы Время заезда и выезда»
+var timeInInput = form.querySelector('#timein');
+var timeOutInput = form.querySelector('#timeout');
+
+timeInInput.addEventListener('change', function() {
+  timeOutInput.value = timeInInput.value;
+});
+timeOutInput.addEventListener('change', function() {
+  timeInInput.value = timeOutInput.value;
+});
