@@ -110,7 +110,6 @@ var setAddress = function() {
 };
 
 // перевод страницы в активный режим
-
 var activatePage = function() {
   if (!isPageActive) {
     map.classList.remove('map--faded');
@@ -124,10 +123,9 @@ var activatePage = function() {
     var similarPosters = generateSimilarPosters();
     renderSimilarPosters(similarPosters);
     setAddress();
+    console.log('activated');
   }
 }
-
-mainPin.addEventListener('mouseup', activatePage);
 
 // для изначального значения поля адреса при загрузке страницы
 setAddress();
@@ -154,4 +152,60 @@ timeInInput.addEventListener('change', function() {
 });
 timeOutInput.addEventListener('change', function() {
   timeInInput.value = timeOutInput.value;
+});
+
+// перемещение главной метки
+mainPin.addEventListener('mousedown', function(evt) {
+  activatePage();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function(moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var mainPinY = (mainPin.offsetTop - shift.y);
+    var mainPinX = (mainPin.offsetLeft - shift.x);
+
+    if (mainPinY < EMPTY_MAP_SPACE - PIN_HEIGHT) {
+      mainPinY = EMPTY_MAP_SPACE - PIN_HEIGHT;
+    } else if (mainPinY > MAP_HEIGHT) {
+      mainPinY = MAP_HEIGHT;
+    }
+
+    if (mainPinX < -MAIN_PIN_WIDTH / 2) {
+      mainPinX = -MAIN_PIN_WIDTH / 2;
+    } else if (mainPinX > (mapWidth - MAIN_PIN_WIDTH / 2)) {
+      mainPinX = mapWidth - MAIN_PIN_WIDTH / 2;
+    }
+
+    mainPin.style.top = mainPinY + 'px';
+    mainPin.style.left = mainPinX + 'px';
+
+    setAddress();
+  };
+
+  var onMouseUp = function(upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    setAddress();
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
