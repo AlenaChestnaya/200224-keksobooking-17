@@ -13,18 +13,9 @@ var MIN_PRICES_PER_NIGHT = [0, 1000, 5000, 10000];
 var map = document.querySelector('.map');
 var mapWidth = map.clientWidth;
 var workspaceHeight = MAP_HEIGHT - EMPTY_MAP_SPACE;
-var avatars = [];
-for (var i = 1; i <= SIMILAR_POSTERS_COUNT; i++) {
-  avatars.push(i);
-}
 
-var calcRandomOfArray = function(array) {
-  var random = Math.floor(Math.random() * array.length);
-  return random;
-};
-var calcRandomOfDiapason = function(diapason) {
-  var random = Math.round(Math.random() * diapason);
-  return random;
+var calcRandom = function(number) {
+  return Math.round(Math.random() * number);
 };
 
 var generateSimilarPosters = function() {
@@ -43,18 +34,14 @@ var generateSimilarPosters = function() {
       }
     };
 
-    var randomNumber = calcRandomOfArray(avatars);
-    var avatarNumber = avatars[randomNumber];
-    avatars.splice(randomNumber, 1);
+    var avatarNumber = i + 1;
+    similarPoster.author.avatar = 'img/avatars/user0' + avatarNumber + '.png';
 
-    var userAvatar = 'img/avatars/user0' + avatarNumber + '.png';
-    similarPoster.author.avatar = userAvatar;
-
-    var typeOfOffer = OFFER_TYPES[calcRandomOfArray(OFFER_TYPES)];
+    var typeOfOffer = OFFER_TYPES[calcRandom(OFFER_TYPES.length)];
     similarPoster.offer.type = typeOfOffer;
 
-    var positionX = calcRandomOfDiapason(mapWidth);
-    var positionY = calcRandomOfDiapason(workspaceHeight) + EMPTY_MAP_SPACE;
+    var positionX = calcRandom(mapWidth);
+    var positionY = calcRandom(workspaceHeight) + EMPTY_MAP_SPACE;
 
     similarPoster.location.x = positionX;
     similarPoster.location.y = positionY;
@@ -123,7 +110,6 @@ var setAddress = function() {
 };
 
 // перевод страницы в активный режим
-
 var activatePage = function() {
   if (!isPageActive) {
     map.classList.remove('map--faded');
@@ -137,10 +123,9 @@ var activatePage = function() {
     var similarPosters = generateSimilarPosters();
     renderSimilarPosters(similarPosters);
     setAddress();
+    console.log('activated');
   }
 }
-
-mainPin.addEventListener('mouseup', activatePage);
 
 // для изначального значения поля адреса при загрузке страницы
 setAddress();
@@ -158,7 +143,7 @@ offerTypeSelect.addEventListener('change', function() {
   }
 });
 
-// связь полей формы Время заезда и выезда»
+// связь полей формы Время заезда и выезда
 var timeInInput = form.querySelector('#timein');
 var timeOutInput = form.querySelector('#timeout');
 
@@ -167,4 +152,60 @@ timeInInput.addEventListener('change', function() {
 });
 timeOutInput.addEventListener('change', function() {
   timeInInput.value = timeOutInput.value;
+});
+
+// перемещение главной метки
+mainPin.addEventListener('mousedown', function(evt) {
+  activatePage();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function(moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var mainPinY = (mainPin.offsetTop - shift.y);
+    var mainPinX = (mainPin.offsetLeft - shift.x);
+
+    if (mainPinY < EMPTY_MAP_SPACE - PIN_HEIGHT) {
+      mainPinY = EMPTY_MAP_SPACE - PIN_HEIGHT;
+    } else if (mainPinY > MAP_HEIGHT) {
+      mainPinY = MAP_HEIGHT;
+    }
+
+    if (mainPinX < -MAIN_PIN_WIDTH / 2) {
+      mainPinX = -MAIN_PIN_WIDTH / 2;
+    } else if (mainPinX > (mapWidth - MAIN_PIN_WIDTH / 2)) {
+      mainPinX = mapWidth - MAIN_PIN_WIDTH / 2;
+    }
+
+    mainPin.style.top = mainPinY + 'px';
+    mainPin.style.left = mainPinX + 'px';
+
+    setAddress();
+  };
+
+  var onMouseUp = function(upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    setAddress();
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
