@@ -49,7 +49,7 @@
 
     window.util = {
         OFFER_TYPES: OFFER_TYPES,
-        similarPosters: generateSimilarPosters(),
+        generateSimilarPosters: generateSimilarPosters,
         mapWidth: mapWidth,
         MAP_HEIGHT: MAP_HEIGHT,
         EMPTY_MAP_SPACE: EMPTY_MAP_SPACE
