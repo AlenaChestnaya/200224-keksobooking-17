@@ -6,11 +6,11 @@
     var mainPin = document.querySelector('.map__pin--main');
     var isPageActive = false;
     var form = document.querySelector('.ad-form');
-    
+
     // связь координат главной метки со значением поля адреса
     var setAddress = function() {
         var addressInput = form.querySelector('#address');
-    
+
         var mainPinPositionX = Math.floor(parseFloat(mainPin.style.left) + Math.round(MAIN_PIN_WIDTH / 2));
         var mainPinPositionY;
         if (isPageActive) {
@@ -18,7 +18,7 @@
         } else {
             mainPinPositionY = parseFloat(mainPin.style.top) + MAIN_PIN_WIDTH / 2;
         }
-    
+
         addressInput.value = mainPinPositionX + ', ' + mainPinPositionY;
     };
 
@@ -35,7 +35,8 @@
             }
 
             isPageActive = true;
-            window.similarPosters.renderSimilarPosters(window.util.similarPosters);
+
+            window.similarPosters.getSimilarPosters();
             setAddress();
         }
     }
