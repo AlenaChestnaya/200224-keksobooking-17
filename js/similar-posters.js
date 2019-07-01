@@ -4,7 +4,7 @@
   var PIN_WIDTH = 50;
 
   // создание дом-элемента с данными из объектов
-  var createPosterCard = function(similarPoster) {
+  var createPosterCard = function (similarPoster) {
     var template = document.querySelector('#pin').content.querySelector('.map__pin');
     var posterCard = template.cloneNode(true);
 
@@ -22,7 +22,7 @@
     return posterCard;
   };
 
-  var renderSimilarPosters = function(similarPosters) {
+  var renderSimilarPosters = function (similarPosters) {
     var mapPinsBlock = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
 
@@ -33,12 +33,11 @@
     }
 
     mapPinsBlock.appendChild(fragment);
-  }
+  };
 
-  var getSimilarPosters = function() {
+  var getSimilarPosters = function () {
 
-    var onError = function (message) {
-      console.error(message);
+    var onError = function () {
       var template = document.querySelector('#error').content.querySelector('.error');
       var errorMessage = template.cloneNode(true);
 
@@ -49,7 +48,7 @@
       main.appendChild(errorMessage);
       var errorClose = errorMessage.querySelector('.error__button');
       errorClose.textContent = 'Закрыть';
-      errorClose.addEventListener('click', function() {
+      errorClose.addEventListener('click', function () {
         main.removeChild(errorMessage);
       });
     };
