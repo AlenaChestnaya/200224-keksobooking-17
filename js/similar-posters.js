@@ -2,6 +2,7 @@
 
 (function () {
   var PIN_WIDTH = 50;
+  var PINS_TOTAL = 5;
 
   // создание дом-элемента с данными из объектов
   var createPosterCard = function (similarPoster) {
@@ -31,8 +32,15 @@
       var posterCard = createPosterCard(similarPoster);
       fragment.appendChild(posterCard);
     }
-
+    console.log(similarPosters);
     mapPinsBlock.appendChild(fragment);
+  };
+
+  var filterPosters = function (similarPosters) {
+    var filteredSimilarPosters;
+
+    filteredSimilarPosters = similarPosters.slice(0, PINS_TOTAL);
+    renderSimilarPosters(filteredSimilarPosters);
   };
 
   var getSimilarPosters = function () {
@@ -53,7 +61,7 @@
       });
     };
 
-    window.load('https://js.dump.academy/keksobooking/data', renderSimilarPosters, onError);
+    window.load('https://js.dump.academy/keksobooking/data', filterPosters, onError);
   };
 
   window.similarPosters = {
