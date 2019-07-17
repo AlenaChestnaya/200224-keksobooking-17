@@ -93,7 +93,6 @@
   var loadPosters = function (similarPosters) {
     posters = similarPosters;
     filterPosters();
-    console.log(posters);
   };
 
   // получение массива объектов с похожими объявлениями с сервера
