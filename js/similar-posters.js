@@ -36,35 +36,10 @@
     for (var j = 0; j < similarPosters.length; j++) {
       var similarPoster = similarPosters[j];
       var mapPin = createMapPin(similarPoster);
-      onMapPinClick(mapPin, similarPoster);
+      onPinClick(mapPin, similarPoster);
       fragment.appendChild(mapPin);
     }
     mapPinsBlock.appendChild(fragment);
-  };
-
-  // показывание карточки по клику на метку
-  var onMapPinClick = function (pin, poster) {
-    pin.addEventListener('click', function () {
-      var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-
-      for (var i = 0; i < pins.length; i++) {
-        pins[i].classList.remove('map__pin--active');
-      }
-
-      this.classList.add('map__pin--active');
-      hidePosterCard();
-      renderPosterCard(poster);
-    });
-  };
-
-  // удаление карточки похожего объявления
-  var hidePosterCard = function () {
-    var map = document.querySelector('.map');
-    var posterCard = map.querySelector('.map__card');
-
-    if (posterCard) {
-      map.removeChild(posterCard);
-    }
   };
 
   var filterForm = document.querySelector('.map__filters');
@@ -117,17 +92,12 @@
     window.load('https://js.dump.academy/keksobooking/data', loadPosters, onError);
   };
 
-  // создание подробной карточки похожего объявления - создать новый модуль
+  // создание подробной карточки похожего объявления
 
   // создание дом-элемента карточки похожего объявления с данными из объектов
   var createPosterCard = function (similarPoster) {
     var template = document.querySelector('#card').content.querySelector('.map__card');
     var posterCard = template.cloneNode(true);
-
-    // var positionX = similarPoster.location.x - PIN_WIDTH / 2;
-    // var positionY = similarPoster.location.y;
-    // var coordinates = 'left: ' + positionX + 'px; ' + 'top: ' + positionY + 'px;';
-    // posterCard.style = coordinates;
 
     var fillPosterCard = function (tag, data) {
       var elem = posterCard.querySelector(tag);
@@ -221,15 +191,52 @@
   };
 
   // отрисовка карточки похожего объявления с данными из объектов
-
   var renderPosterCard = function (similarPoster) {
-    var mapCardsBlock = document.querySelector('.map');
-    var mapFilters = mapCardsBlock.querySelector('.map__filters-container');
+    var map = document.querySelector('.map');
+    var mapFilters = map.querySelector('.map__filters-container');
     var fragment = document.createDocumentFragment();
     var posterCard = createPosterCard(similarPoster);
 
     fragment.appendChild(posterCard);
-    mapCardsBlock.insertBefore(fragment, mapFilters);
+    map.insertBefore(fragment, mapFilters);
+
+    var cardClose = document.querySelector('.map__card .popup__close');
+    cardClose.addEventListener('click', hidePosterCard);
+
+    document.addEventListener('keydown', onPopupEscPress);
+  };
+
+  // показывание карточки по клику на метку
+  var onPinClick = function (pin, poster) {
+    pin.addEventListener('click', function () {
+      var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+      for (var j = 0; j < pins.length; j++) {
+        pins[j].classList.remove('map__pin--active');
+      }
+
+      this.classList.add('map__pin--active');
+      hidePosterCard();
+      renderPosterCard(poster);
+    });
+  };
+
+  // удаление карточки похожего объявления
+  var hidePosterCard = function () {
+    var map = document.querySelector('.map');
+    var posterCard = map.querySelector('.map__card');
+
+    if (posterCard) {
+      map.removeChild(posterCard);
+    }
+
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+
+  var onPopupEscPress = function (evt) {
+    if (evt.keyCode === 27) {
+      hidePosterCard();
+    }
   };
 
   window.similarPosters = {
