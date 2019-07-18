@@ -110,15 +110,11 @@
       }
     };
 
-    // пристроить проверки на неполученные данные с сервера при каждом вызове функции заполнения поля карточки
     fillPosterCard('.popup__title', similarPoster.offer.title);
-
     fillPosterCard('.popup__text--address', similarPoster.offer.address);
 
     var priceField = posterCard.querySelector('.popup__text--price');
     priceField.firstChild.nodeValue = similarPoster.offer.price + '₽';
-
-    // проверить правильное именование словаря и кавычки
 
     var offerType = {
       'flat': 'Квартира',
@@ -128,7 +124,13 @@
     };
 
     fillPosterCard('.popup__type', offerType[similarPoster.offer.type]);
-    fillPosterCard('.popup__text--capacity', similarPoster.offer.rooms + ' комнаты для ' + similarPoster.offer.guests + ' гостей');
+
+    if (!similarPoster.offer.rooms || !similarPoster.offer.guests) {
+      posterCard.querySelector('.popup__text--capacity').style.display = 'none';
+    } else {
+      fillPosterCard('.popup__text--capacity', similarPoster.offer.rooms + ' комнаты для ' + similarPoster.offer.guests + ' гостей');
+    }
+
     fillPosterCard('.popup__text--time', 'Заезд после ' + similarPoster.offer.checkin + ', выезд до ' + similarPoster.offer.checkout);
 
     var featuresList = posterCard.querySelector('.popup__features');
