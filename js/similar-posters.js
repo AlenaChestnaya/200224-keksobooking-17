@@ -42,9 +42,8 @@
     mapPinsBlock.appendChild(fragment);
   };
 
-  var filterForm = document.querySelector('.map__filters');
-
   // фильтрация похожих объявлений по форме фильтров и максимальному количеству
+  var filterForm = document.querySelector('.map__filters');
   var lastTimeout;
   var filterPosters = function () {
     var filteredPosters = posters.slice();
@@ -68,6 +67,8 @@
           return poster.offer.price < 10000;
         } else if (priceSelect.value === 'high') {
           return poster.offer.price > 50000;
+        } else {
+          return false;
         }
       });
     }
@@ -122,7 +123,14 @@
     filterCheckboxes[j].addEventListener('change', filterPosters);
   }
 
+  for (var k = 0; k < filterForm.children.length; k++) {
+    filterForm.children[k].disabled = true;
+  }
+
   var loadPosters = function (similarPosters) {
+    similarPosters = similarPosters.filter(function (poster) {
+      return poster.offer;
+    });
     posters = similarPosters;
     console.log(posters);
     filterPosters();
@@ -195,11 +203,11 @@
     if (similarPoster.offer.features.length === 0) {
       featuresList.style.display = 'none';
     } else {
-      for (var k = 0; k < featuresList.children.length; k++) {
-        featuresList.children[k].style.display = 'none';
+      for (var l = 0; l < featuresList.children.length; l++) {
+        featuresList.children[l].style.display = 'none';
       }
-      for (var l = 0; l < similarPoster.offer.features.length; l++) {
-        var featureClass = '.popup__feature--' + similarPoster.offer.features[l];
+      for (var m = 0; m < similarPoster.offer.features.length; m++) {
+        var featureClass = '.popup__feature--' + similarPoster.offer.features[m];
         featuresList.querySelector(featureClass).style.display = 'inline-block';
       }
     }
@@ -236,9 +244,9 @@
 
       photosBlock.removeChild(templatePhoto);
 
-      for (var m = 0; m < photos.length; m++) {
+      for (var n = 0; n < photos.length; n++) {
         var offerPhoto = templatePhoto.cloneNode(true);
-        offerPhoto.src = photos[m];
+        offerPhoto.src = photos[n];
         photosBlock.appendChild(offerPhoto);
       }
     } else {
@@ -271,8 +279,8 @@
     pin.addEventListener('click', function () {
       var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-      for (var k = 0; k < pins.length; k++) {
-        pins[k].classList.remove('map__pin--active');
+      for (var l = 0; l < pins.length; l++) {
+        pins[l].classList.remove('map__pin--active');
       }
       this.classList.add('map__pin--active');
       hidePosterCard();

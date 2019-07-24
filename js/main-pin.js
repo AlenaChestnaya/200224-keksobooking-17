@@ -6,6 +6,7 @@
   var mainPin = document.querySelector('.map__pin--main');
   var isPageActive = false;
   var form = document.querySelector('.ad-form');
+  var filterForm = document.querySelector('.map__filters');
 
   // связь координат главной метки со значением поля адреса
   var setAddress = function () {
@@ -38,6 +39,10 @@
 
       window.similarPosters.getSimilarPosters();
       setAddress();
+
+      for (var j = 0; j < filterForm.children.length; j++) {
+        filterForm.children[j].removeAttribute('disabled');
+      }
     }
   };
 
