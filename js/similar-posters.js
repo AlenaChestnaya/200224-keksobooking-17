@@ -132,7 +132,7 @@
       return poster.offer;
     });
     posters = similarPosters;
-    console.log(posters);
+    // console.log(posters);
     filterPosters();
   };
 
