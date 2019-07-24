@@ -45,6 +45,7 @@
   var filterForm = document.querySelector('.map__filters');
 
   // фильтрация похожих объявлений по форме фильтров и максимальному количеству
+  var lastTimeout;
   var filterPosters = function () {
     var filteredPosters = posters.slice();
 
@@ -100,7 +101,14 @@
 
     filteredPosters = filteredPosters.slice(0, PINS_TOTAL);
     hidePosterCard();
-    renderSimilarPosters(filteredPosters);
+
+    // устранение дребезга
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(function () {
+      renderSimilarPosters(filteredPosters);
+    }, 500);
   };
 
   var filterInputs = filterForm.querySelectorAll('.map__filter');
@@ -266,7 +274,6 @@
       for (var k = 0; k < pins.length; k++) {
         pins[k].classList.remove('map__pin--active');
       }
-
       this.classList.add('map__pin--active');
       hidePosterCard();
       renderPosterCard(poster);
