@@ -4,6 +4,7 @@
 (function () {
   var PIN_WIDTH = 50;
   var PINS_TOTAL = 5;
+  var DEBOUNCE_INTERVAL = 500;
   var posters = [];
 
   // создание дом-элемента метки похожего объявления с данными из объектов
@@ -27,11 +28,8 @@
   var renderSimilarPosters = function (similarPosters) {
     var mapPinsBlock = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
-    var renderedPins = mapPinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-    for (var i = 0; i < renderedPins.length; i++) {
-      mapPinsBlock.removeChild(renderedPins[i]);
-    }
+    window.util.removePins();
 
     for (var j = 0; j < similarPosters.length; j++) {
       var similarPoster = similarPosters[j];
@@ -101,7 +99,7 @@
     }
 
     filteredPosters = filteredPosters.slice(0, PINS_TOTAL);
-    hidePosterCard();
+    window.util.hidePosterCard();
 
     // устранение дребезга
     if (lastTimeout) {
@@ -109,7 +107,7 @@
     }
     lastTimeout = window.setTimeout(function () {
       renderSimilarPosters(filteredPosters);
-    }, 500);
+    }, DEBOUNCE_INTERVAL);
   };
 
   var filterInputs = filterForm.querySelectorAll('.map__filter');
@@ -123,16 +121,13 @@
     filterCheckboxes[j].addEventListener('change', filterPosters);
   }
 
-  for (var k = 0; k < filterForm.children.length; k++) {
-    filterForm.children[k].disabled = true;
-  }
+  window.util.disableFilters();
 
   var loadPosters = function (similarPosters) {
     similarPosters = similarPosters.filter(function (poster) {
       return poster.offer;
     });
     posters = similarPosters;
-    // console.log(posters);
     filterPosters();
   };
 
@@ -155,7 +150,7 @@
       });
     };
 
-    window.load('https://js.dump.academy/keksobooking/data', loadPosters, onError);
+    window.load.load('https://js.dump.academy/keksobooking/data', loadPosters, onError);
   };
 
   // создание подробной карточки похожего объявления
@@ -269,9 +264,9 @@
     map.insertBefore(fragment, mapFilters);
 
     var cardClose = document.querySelector('.map__card .popup__close');
-    cardClose.addEventListener('click', hidePosterCard);
+    cardClose.addEventListener('click', window.util.hidePosterCard);
 
-    document.addEventListener('keydown', onPopupEscPress);
+    document.addEventListener('keydown', window.util.onPopupEscPress);
   };
 
   // показывание карточки по клику на метку
@@ -283,27 +278,9 @@
         pins[l].classList.remove('map__pin--active');
       }
       this.classList.add('map__pin--active');
-      hidePosterCard();
+      window.util.hidePosterCard();
       renderPosterCard(poster);
     });
-  };
-
-  // удаление карточки похожего объявления
-  var hidePosterCard = function () {
-    var map = document.querySelector('.map');
-    var posterCard = map.querySelector('.map__card');
-
-    if (posterCard) {
-      map.removeChild(posterCard);
-    }
-
-    document.removeEventListener('keydown', onPopupEscPress);
-  };
-
-  var onPopupEscPress = function (evt) {
-    if (evt.keyCode === 27) {
-      hidePosterCard();
-    }
   };
 
   window.similarPosters = {

@@ -1,3 +1,4 @@
+/* eslint-disable space-before-blocks */
 'use strict';
 
 (function () {
@@ -5,16 +6,19 @@
   var MIN_PRICES_PER_NIGHT = [0, 1000, 5000, 10000];
   var form = document.querySelector('.ad-form');
 
-  for (var i = 0; i < form.children.length; i++) {
-    form.children[i].disabled = true;
-  }
+  window.util.disableForm();
 
   // связь полей формы Тип жилья и Цена за ночь
   var offerTypeSelect = form.querySelector('#type');
   var priceInput = form.querySelector('#price');
 
+  var elementIndex = window.util.OFFER_TYPES.indexOf(offerTypeSelect.value);
+
+  priceInput.min = MIN_PRICES_PER_NIGHT[elementIndex];
+  priceInput.placeholder = MIN_PRICES_PER_NIGHT[elementIndex];
+
   offerTypeSelect.addEventListener('change', function () {
-    var elementIndex = window.util.OFFER_TYPES.indexOf(offerTypeSelect.value);
+    elementIndex = window.util.OFFER_TYPES.indexOf(offerTypeSelect.value);
 
     if (elementIndex !== -1) {
       priceInput.min = MIN_PRICES_PER_NIGHT[elementIndex];
@@ -62,4 +66,51 @@
       guestsSelect.value = '0';
     }
   });
+
+  // сбор дефолтных значений полей формы
+  var fields = form.querySelectorAll('input, textarea, select');
+  var defaultValues = [];
+  for (var i = 0; i < fields.length; i++) {
+    defaultValues[i] = fields[i].value;
+  }
+
+  // отправка формы
+  var onSubmitSuccess = function () {
+    console.log('показать окно успеха');
+    // на экран выводится сообщение об успешной отправке данных. Разметку сообщения, которая находится блоке #success внутри шаблона template, нужно разместить в main;
+    // сообщение должно исчезать по нажатию на клавишу Esc и по клику на произвольную область экрана.
+    window.util.desactivatePage();
+  };
+  var onSubmitError = function () {
+    console.log('показать окно неуспеха');
+  };
+
+  form.onsubmit = function (evt) {
+    evt.preventDefault();
+    window.load.upload(new FormData(form), onSubmitSuccess, onSubmitError);
+  };
+
+  // очистка полей формы
+  var resetForm = function () {
+    for (var j = 0; j < fields.length; j++) {
+      fields[j].value = defaultValues[j];
+    }
+
+    var checkboxes = form.querySelectorAll('input[type="checkbox"]');
+    for (var k = 0; k < checkboxes.length; k++) {
+      checkboxes[k].checked = false;
+    }
+
+
+    elementIndex = window.util.OFFER_TYPES.indexOf(offerTypeSelect.value);
+    priceInput.min = MIN_PRICES_PER_NIGHT[elementIndex];
+    priceInput.placeholder = MIN_PRICES_PER_NIGHT[elementIndex];
+  };
+
+  var formReset = form.querySelector('.ad-form__reset');
+  formReset.addEventListener('click', window.util.desactivatePage);
+
+  window.form = {
+    resetForm: resetForm
+  };
 })();
