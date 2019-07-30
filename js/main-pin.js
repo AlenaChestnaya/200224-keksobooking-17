@@ -4,9 +4,16 @@
   var PIN_HEIGHT = 70;
   var MAIN_PIN_WIDTH = 65;
   var mainPin = document.querySelector('.map__pin--main');
-  var isPageActive = false;
   var form = document.querySelector('.ad-form');
   var filterForm = document.querySelector('.map__filters');
+  var defaultPositionY = mainPin.style.top;
+  var defaultPositionX = mainPin.style.left;
+
+  var resetMainPinPosition = function () {
+    mainPin.style.top = defaultPositionY;
+    mainPin.style.left = defaultPositionX;
+    setAddress();
+  };
 
   // связь координат главной метки со значением поля адреса
   var setAddress = function () {
@@ -14,7 +21,7 @@
 
     var mainPinPositionX = Math.floor(parseFloat(mainPin.style.left) + Math.round(MAIN_PIN_WIDTH / 2));
     var mainPinPositionY;
-    if (isPageActive) {
+    if (window.util.isPageActive) {
       mainPinPositionY = parseFloat(mainPin.style.top) + PIN_HEIGHT;
     } else {
       mainPinPositionY = parseFloat(mainPin.style.top) + MAIN_PIN_WIDTH / 2;
@@ -27,21 +34,21 @@
   var map = document.querySelector('.map');
 
   var activatePage = function () {
-    if (!isPageActive) {
+    if (!window.util.isPageActive) {
       map.classList.remove('map--faded');
       form.classList.remove('ad-form--disabled');
 
       for (var i = 0; i < form.children.length; i++) {
-        form.children[i].removeAttribute('disabled');
+        form.children[i].disabled = false;
       }
 
-      isPageActive = true;
+      window.util.isPageActive = true;
 
       window.similarPosters.getSimilarPosters();
       setAddress();
 
       for (var j = 0; j < filterForm.children.length; j++) {
-        filterForm.children[j].removeAttribute('disabled');
+        filterForm.children[j].disabled = false;
       }
     }
   };
@@ -104,5 +111,9 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  window.mainPin = {
+    resetMainPinPosition: resetMainPinPosition
+  };
 
 })();
