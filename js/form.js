@@ -76,13 +76,47 @@
 
   // отправка формы
   var onSubmitSuccess = function () {
-    console.log('показать окно успеха');
-    // на экран выводится сообщение об успешной отправке данных. Разметку сообщения, которая находится блоке #success внутри шаблона template, нужно разместить в main;
-    // сообщение должно исчезать по нажатию на клавишу Esc и по клику на произвольную область экрана.
+    var template = document.querySelector('#success').content.querySelector('.success');
+    var successPopup = template.cloneNode(true);
+
+    document.querySelector('main').appendChild(successPopup);
+    successPopup = document.querySelector('main .success');
+
+    var onPopupEscPress = function (evt) {
+      if (evt.keyCode === window.util.ESC_CODE) {
+        document.querySelector('main').removeChild(successPopup);
+      }
+    };
+
+    successPopup.addEventListener('click', function () {
+      document.querySelector('main').removeChild(successPopup);
+      document.removeEventListener('keydown', onPopupEscPress);
+    });
+    document.addEventListener('keydown', onPopupEscPress);
     window.util.desactivatePage();
   };
+
   var onSubmitError = function () {
-    console.log('показать окно неуспеха');
+    var template = document.querySelector('#error').content.querySelector('.error');
+    var errorPopup = template.cloneNode(true);
+
+    document.querySelector('main').appendChild(errorPopup);
+    errorPopup = document.querySelector('main .error');
+
+    var onPopupEscPress = function (evt) {
+      if (evt.keyCode === window.util.ESC_CODE) {
+        document.querySelector('main').removeChild(errorPopup);
+      }
+    };
+    var removeErrorPopup = function () {
+      document.querySelector('main').removeChild(errorPopup);
+      document.removeEventListener('keydown', onPopupEscPress);
+    };
+
+
+    errorPopup.addEventListener('click', removeErrorPopup);
+    document.addEventListener('keydown', onPopupEscPress);
+    errorPopup.querySelector('.error__button').addEventListener('click', removeErrorPopup);
   };
 
   form.onsubmit = function (evt) {

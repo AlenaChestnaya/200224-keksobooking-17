@@ -68,9 +68,10 @@
 
   window.util = {
     OFFER_TYPES: OFFER_TYPES,
-    mapWidth: mapWidth,
+    ESC_CODE: ESC_CODE,
     MAP_HEIGHT: MAP_HEIGHT,
     EMPTY_MAP_SPACE: EMPTY_MAP_SPACE,
+    mapWidth: mapWidth,
     desactivatePage: desactivatePage,
     removePins: removePins,
     disableFilters: disableFilters,
