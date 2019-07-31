@@ -8,13 +8,13 @@
   var load = function (url, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
-    xhr.responseType = 'json'; // приводит текст ответа с сервера в объект
+    xhr.responseType = 'json';
 
-    xhr.addEventListener('load', function () { // действие, которое сработает, когда сервер вернет ответ
+    xhr.addEventListener('load', function () {
       if (xhr.status === SUCCESS_CODE) {
-        onSuccess(xhr.response); // текст ответа - данные - в виде массива объектов
+        onSuccess(xhr.response);
       } else {
-        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText); // код ответа - ок или 404
+        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
 
@@ -28,8 +28,8 @@
 
     xhr.timeout = TIMEOUT;
 
-    xhr.open('GET', url); // как и куда мы хотим обратиться
-    xhr.send(); // для отправки запроса запускаем его
+    xhr.open('GET', url);
+    xhr.send();
   };
 
   var upload = function (data, onSuccess, onError) {
