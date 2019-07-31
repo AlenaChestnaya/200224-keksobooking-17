@@ -1,4 +1,3 @@
-/* eslint-disable space-before-blocks */
 'use strict';
 
 (function () {
@@ -84,12 +83,12 @@
 
     var onPopupEscPress = function (evt) {
       if (evt.keyCode === window.util.ESC_CODE) {
-        document.querySelector('main').removeChild(successPopup);
+        successPopup.remove();
       }
     };
 
     successPopup.addEventListener('click', function () {
-      document.querySelector('main').removeChild(successPopup);
+      successPopup.remove();
       document.removeEventListener('keydown', onPopupEscPress);
     });
     document.addEventListener('keydown', onPopupEscPress);
@@ -105,14 +104,13 @@
 
     var onPopupEscPress = function (evt) {
       if (evt.keyCode === window.util.ESC_CODE) {
-        document.querySelector('main').removeChild(errorPopup);
+        errorPopup.remove();
       }
     };
     var removeErrorPopup = function () {
-      document.querySelector('main').removeChild(errorPopup);
+      errorPopup.remove();
       document.removeEventListener('keydown', onPopupEscPress);
     };
-
 
     errorPopup.addEventListener('click', removeErrorPopup);
     document.addEventListener('keydown', onPopupEscPress);
@@ -134,7 +132,6 @@
     for (var k = 0; k < checkboxes.length; k++) {
       checkboxes[k].checked = false;
     }
-
 
     elementIndex = window.util.OFFER_TYPES.indexOf(offerTypeSelect.value);
     priceInput.min = MIN_PRICES_PER_NIGHT[elementIndex];

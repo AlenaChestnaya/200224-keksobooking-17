@@ -5,6 +5,15 @@
   var PIN_WIDTH = 50;
   var PINS_TOTAL = 5;
   var DEBOUNCE_INTERVAL = 500;
+  var LOW_PRICE = 10000;
+  var HIGH_PRICE = 50000;
+  var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
+  var OfferType = {
+    'FLAT': 'Квартира',
+    'BUNGALO': 'Бунгало',
+    'HOUSE': 'Дом',
+    'PALACE': 'Дворец'
+  };
   var posters = [];
 
   // создание дом-элемента метки похожего объявления с данными из объектов
@@ -60,11 +69,11 @@
     if (priceSelect.value !== 'any') {
       filteredPosters = filteredPosters.filter(function (poster) {
         if (priceSelect.value === 'middle') {
-          return poster.offer.price >= 10000 && poster.offer.price <= 50000;
+          return poster.offer.price >= LOW_PRICE && poster.offer.price <= HIGH_PRICE;
         } else if (priceSelect.value === 'low') {
-          return poster.offer.price < 10000;
+          return poster.offer.price < LOW_PRICE;
         } else if (priceSelect.value === 'high') {
-          return poster.offer.price > 50000;
+          return poster.offer.price > HIGH_PRICE;
         } else {
           return false;
         }
@@ -150,7 +159,7 @@
       });
     };
 
-    window.load.load('https://js.dump.academy/keksobooking/data', loadPosters, onError);
+    window.load.load(LOAD_URL, loadPosters, onError);
   };
 
   // создание подробной карточки похожего объявления
@@ -177,14 +186,7 @@
     var priceField = posterCard.querySelector('.popup__text--price');
     priceField.firstChild.nodeValue = similarPoster.offer.price + '₽';
 
-    var offerType = {
-      'flat': 'Квартира',
-      'bungalo': 'Бунгало',
-      'house': 'Дом',
-      'palace': 'Дворец'
-    };
-
-    fillPosterCard('.popup__type', offerType[similarPoster.offer.type]);
+    fillPosterCard('.popup__type', OfferType[similarPoster.offer.type]);
 
     if (!similarPoster.offer.rooms || !similarPoster.offer.guests) {
       posterCard.querySelector('.popup__text--capacity').style.display = 'none';
@@ -206,28 +208,6 @@
         featuresList.querySelector(featureClass).style.display = 'inline-block';
       }
     }
-
-    // var featuresList = posterCard.querySelector('.popup__features');
-
-    // if (similarPoster.offer.features.length === 0) {
-    //   featuresList.style.display = 'none';
-    // } else {
-    //   for (var j = 0; j < featuresList.children.length; j++) {
-    //     var feature = featuresList.children[j];
-    //     var isFeatureExist = false;
-
-    //     for (var k = 0; k < similarPoster.offer.features.length; k++) {
-    //       var featureClass = 'popup__feature--' + similarPoster.offer.features[k];
-    //       if (feature.className.indexOf(featureClass) !== -1) {
-    //         isFeatureExist = true;
-    //         break;
-    //       }
-    //     }
-    //     if (!isFeatureExist) {
-    //       feature.style.display = 'none';
-    //     }
-    //   }
-    // }
 
     fillPosterCard('.popup__description', similarPoster.offer.description);
 
