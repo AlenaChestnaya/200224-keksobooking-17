@@ -1,4 +1,3 @@
-/* eslint-disable no-invalid-this */
 'use strict';
 
 (function () {
@@ -257,7 +256,7 @@
       for (var l = 0; l < pins.length; l++) {
         pins[l].classList.remove('map__pin--active');
       }
-      this.classList.add('map__pin--active');
+      pin.classList.add('map__pin--active');
       window.util.hidePosterCard();
       renderPosterCard(poster);
     });
