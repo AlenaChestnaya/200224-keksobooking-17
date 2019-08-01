@@ -42,7 +42,7 @@
     for (var j = 0; j < similarPosters.length; j++) {
       var similarPoster = similarPosters[j];
       var mapPin = createMapPin(similarPoster);
-      onPinClick(mapPin, similarPoster);
+      addPinClickListener(mapPin, similarPoster);
       fragment.appendChild(mapPin);
     }
     mapPinsBlock.appendChild(fragment);
@@ -140,7 +140,7 @@
   };
 
   // получение массива объектов с похожими объявлениями с сервера
-  var getSimilarPosters = function () {
+  var getList = function () {
 
     var onError = function () {
       var template = document.querySelector('#error').content.querySelector('.error');
@@ -158,7 +158,7 @@
       });
     };
 
-    window.load.load(LOAD_URL, loadPosters, onError);
+    window.xhr.load(LOAD_URL, loadPosters, onError);
   };
 
   // создание подробной карточки похожего объявления
@@ -243,13 +243,15 @@
     map.insertBefore(fragment, mapFilters);
 
     var cardClose = document.querySelector('.map__card .popup__close');
-    cardClose.addEventListener('click', window.util.hidePosterCard);
+    cardClose.addEventListener('click', function () {
+      window.util.hidePosterCard();
+    });
 
     document.addEventListener('keydown', window.util.onPopupEscPress);
   };
 
   // показывание карточки по клику на метку
-  var onPinClick = function (pin, poster) {
+  var addPinClickListener = function (pin, poster) {
     pin.addEventListener('click', function () {
       var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
@@ -263,6 +265,6 @@
   };
 
   window.similarPosters = {
-    getSimilarPosters: getSimilarPosters
+    getList: getList
   };
 })();

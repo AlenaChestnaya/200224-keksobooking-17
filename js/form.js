@@ -59,11 +59,7 @@
       guestsSelect.querySelector('option[value="0"]').disabled = false;
     }
 
-    if (roomsSelect.value !== '100') {
-      guestsSelect.value = '1';
-    } else {
-      guestsSelect.value = '0';
-    }
+    guestsSelect.value = roomsSelect.value !== '100' ? '1' : '0';
   });
 
   // сбор дефолтных значений полей формы
@@ -107,23 +103,23 @@
         errorPopup.remove();
       }
     };
-    var removeErrorPopup = function () {
+    var onErrorClick = function () {
       errorPopup.remove();
       document.removeEventListener('keydown', onPopupEscPress);
     };
 
-    errorPopup.addEventListener('click', removeErrorPopup);
+    errorPopup.addEventListener('click', onErrorClick);
     document.addEventListener('keydown', onPopupEscPress);
-    errorPopup.querySelector('.error__button').addEventListener('click', removeErrorPopup);
+    errorPopup.querySelector('.error__button').addEventListener('click', onErrorClick);
   };
 
   form.onsubmit = function (evt) {
     evt.preventDefault();
-    window.load.upload(new FormData(form), onSubmitSuccess, onSubmitError);
+    window.xhr.upload(new FormData(form), onSubmitSuccess, onSubmitError);
   };
 
   // очистка полей формы
-  var resetForm = function () {
+  var reset = function () {
     for (var j = 0; j < fields.length; j++) {
       fields[j].value = defaultValues[j];
     }
@@ -138,10 +134,12 @@
     priceInput.placeholder = MIN_PRICES_PER_NIGHT[elementIndex];
   };
 
-  var formReset = form.querySelector('.ad-form__reset');
-  formReset.addEventListener('click', window.util.desactivatePage);
+  var formResetButton = form.querySelector('.ad-form__reset');
+  formResetButton.addEventListener('click', function () {
+    window.util.desactivatePage();
+  });
 
   window.form = {
-    resetForm: resetForm
+    reset: reset
   };
 })();
