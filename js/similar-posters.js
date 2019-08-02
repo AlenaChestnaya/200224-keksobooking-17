@@ -39,12 +39,12 @@
 
     window.util.removePins();
 
-    for (var j = 0; j < similarPosters.length; j++) {
-      var similarPoster = similarPosters[j];
+    similarPosters.forEach(function (similarPoster) {
       var mapPin = createMapPin(similarPoster);
       addPinClickListener(mapPin, similarPoster);
       fragment.appendChild(mapPin);
-    }
+    });
+
     mapPinsBlock.appendChild(fragment);
   };
 
@@ -202,10 +202,10 @@
       for (var l = 0; l < featuresList.children.length; l++) {
         featuresList.children[l].style.display = 'none';
       }
-      for (var m = 0; m < similarPoster.offer.features.length; m++) {
-        var featureClass = '.popup__feature--' + similarPoster.offer.features[m];
+      similarPoster.offer.features.forEach(function (feature) {
+        var featureClass = '.popup__feature--' + feature;
         featuresList.querySelector(featureClass).style.display = 'inline-block';
-      }
+      });
     }
 
     fillPosterCard('.popup__description', similarPoster.offer.description);
@@ -218,11 +218,11 @@
 
       photosBlock.removeChild(templatePhoto);
 
-      for (var n = 0; n < photos.length; n++) {
+      photos.forEach(function (photo) {
         var offerPhoto = templatePhoto.cloneNode(true);
-        offerPhoto.src = photos[n];
+        offerPhoto.src = photo;
         photosBlock.appendChild(offerPhoto);
-      }
+      });
     } else {
       photosBlock.style.display = 'none';
     }
