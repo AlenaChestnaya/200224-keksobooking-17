@@ -122,11 +122,15 @@
   var filterCheckboxes = filterForm.querySelectorAll('.map__checkbox');
 
   for (var i = 0; i < filterInputs.length; i++) {
-    filterInputs[i].addEventListener('change', filterPosters);
+    filterInputs[i].addEventListener('change', function () {
+      filterPosters();
+    });
   }
 
   for (var j = 0; j < filterCheckboxes.length; j++) {
-    filterCheckboxes[j].addEventListener('change', filterPosters);
+    filterCheckboxes[j].addEventListener('change', function () {
+      filterPosters();
+    });
   }
 
   window.util.disableFilters();
